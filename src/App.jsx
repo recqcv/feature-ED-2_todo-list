@@ -1,6 +1,5 @@
 import "./App.css";
 import TodoPage from "./components/TodoPage";
-
 function App() {
   return (
     <>
@@ -8,5 +7,4 @@ function App() {
     </>
   );
 }
-
 export default App;

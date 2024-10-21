@@ -22,12 +22,10 @@ export default function TodoPage() {
     await deleteTodoById(id);
     setTodo(todo.filter((todo) => todo.id !== id));
   }
-
   async function handleSaveClick(TaskId, updatedTodo) {
     await updateTodoById(TaskId, updatedTodo);
     setTodo(todo.map((todo) => (todo.id === TaskId ? updatedTodo : todo)));
   }
-
   return (
     <>
       <AddTask todoArray={todo} setTodoArray={setTodo} />
