@@ -2,37 +2,91 @@ import AddTask from "./AddTask";
 import Filter from "./Filter";
 import TaskList from "./TaskList";
 import { useEffect, useState } from "react";
-import { getTodos, deleteTodoById, updateTodoById } from "../api";
+import { getTodos, deleteTodoById, updateTodoById } from "../api/todos";
 
 export default function TodoPage() {
-  const [todo, setTodo] = useState([]);
-  async function handleFilterClick(filter) {
-    setTodo(await getTodos(filter));
+  const [todos, setTodos] = useState([]);
+  const [todosInfo, setTodosInfo] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  async function updateTodosAndCounterByPickedFilter(filter) {
+    setError(null);
+    setIsLoading(true);
+    try {
+      const fetchedTodos = await getTodos(filter);
+      setTodos(fetchedTodos.data);
+      setTodosInfo(fetchedTodos.info);
+    } catch (err) {
+      setError("Не удалось обновить: " + err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function updateTodoPage() {
+    updateTodosAndCounterByPickedFilter();
   }
 
   useEffect(() => {
-    async function fetchTodos() {
-      const todo = await getTodos();
-      setTodo(todo);
+    async function preloadTodos() {
+      updateTodoPage();
     }
-    fetchTodos();
+    preloadTodos();
   }, []);
 
-  async function handleDeleteTask(id) {
-    await deleteTodoById(id);
-    setTodo(todo.filter((todo) => todo.id !== id));
+  async function deleteTask(id) {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await deleteTodoById(id);
+      updateTodoPage();
+    } catch (err) {
+      setError("Не удалось удалить таск: " + err.message);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
-  async function handleSaveClick(TaskId, updatedTodo) {
-    await updateTodoById(TaskId, updatedTodo);
-    setTodo(todo.map((todo) => (todo.id === TaskId ? updatedTodo : todo)));
+  async function saveTask(taskId, updatedTodo) {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await updateTodoById(taskId, updatedTodo);
+      updateTodoPage();
+    } catch (err) {
+      setError("Не удалось сохранить таск: " + err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function todoStatusChange(taskId, updatedStatus) {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await updateTodoById(taskId, updatedStatus);
+      updateTodoPage();
+    } catch (err) {
+      setError("Не удалось обновить статус таски: " + err.message);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
     <>
-      <AddTask todoArray={todo} setTodoArray={setTodo} />
-      <Filter handleFilterClick={handleFilterClick} />
-      <TaskList todo={todo} setTodo={setTodo} handleDeleteTask={handleDeleteTask} handleSaveClick={handleSaveClick} />
+      <AddTask todos={todos} setTodos={setTodos} updateTodoPage={updateTodoPage} />
+      <Filter updateTodosAndCounterByPickedFilter={updateTodosAndCounterByPickedFilter} todosInfo={todosInfo} />
+      {isLoading && <h3 style={{ color: "red" }}>Идёт загрузка</h3>}
+      {error && <h1 style={{ color: "red" }}>{error}</h1>}
+      <TaskList
+        todos={todos}
+        setTodos={setTodos}
+        deleteTask={deleteTask}
+        saveTask={saveTask}
+        todoStatusChange={todoStatusChange}
+      />
     </>
   );
 }

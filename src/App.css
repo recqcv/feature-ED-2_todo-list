@@ -62,3 +62,9 @@
 .checked_task {
   text-decoration: line-through;
 }
+.active_filter {
+  background-color: rgb(0, 255, 76);
+}
+.filter_button {
+  background-color: red;
+} 

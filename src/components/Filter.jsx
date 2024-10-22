@@ -1,28 +1,32 @@
-import { useEffect, useState } from "react";
-import { getTodosStatus } from "../api";
+import { useEffect } from "react";
+import { useState } from "react";
 
-export default function Filter({ handleFilterClick }) {
-  const [todoInfo, setTodoInfo] = useState([]);
+export default function Filter({ updateTodosAndCounterByPickedFilter, todosInfo }) {
+  const [activeFilter, serActiveFilter] = useState("all");
 
-  useEffect(() => {
-    async function fetchTodos() {
-      const todoInfo = await getTodosStatus("all");
-      setTodoInfo(todoInfo);
-    }
-    fetchTodos();
-  }, [setTodoInfo]);
-  //Можно перенести в TodoPage и прокинуть todoInfo для рендера
-
+  function handleUpdateTodosByPickedFilter(filter) {
+    updateTodosAndCounterByPickedFilter(filter);
+    serActiveFilter(filter);
+  }
   return (
     <div className="filter">
-      <button className="filter_button" onClick={() => handleFilterClick("all")}>
-        All {todoInfo.all}
+      <button
+        className={activeFilter === "all" ? " active_filter" : "filter_button"}
+        onClick={() => handleUpdateTodosByPickedFilter("all")}
+      >
+        All {todosInfo.all}
       </button>
-      <button className="filter_button" onClick={() => handleFilterClick("inWork")}>
-        In Work {todoInfo.inWork}
+      <button
+        className={activeFilter === "inWork" ? " active_filter" : "filter_button"}
+        onClick={() => handleUpdateTodosByPickedFilter("inWork")}
+      >
+        In Work {todosInfo.inWork}
       </button>
-      <button className="filter_button" onClick={() => handleFilterClick("completed")}>
-        Completed {todoInfo.completed}
+      <button
+        className={activeFilter === "completed" ? " active_filter" : "filter_button"}
+        onClick={() => handleUpdateTodosByPickedFilter("completed")}
+      >
+        Completed {todosInfo.completed}
       </button>
     </div>
   );
