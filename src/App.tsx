@@ -1,7 +1,7 @@
 import "./App.css";
 import TodoPage from "./components/TodoPage";
 
-function App() {
+function App(): JSX.Element {
   return (
     <>
       <TodoPage />
