@@ -1,7 +1,7 @@
 // const BASE_TODOS_URL = "https://easydev.club/api/v1/todos";
-import { Todo } from '../types/types'
+import { filter, Todo } from '../types/types'
 
-export async function getTodos(filter = "all") {
+export async function getTodos(filter:filter) {
   try {
     const res = await fetch(`https://easydev.club/api/v1/todos?filter=${filter}`, { method: "GET" });
 
