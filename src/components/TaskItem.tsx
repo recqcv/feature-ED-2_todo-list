@@ -1,17 +1,25 @@
 import { useState } from "react";
+import { Todo } from '../types/types'
 
-export default function TaskItem({ task, deleteTask, saveTask, todoStatusChange }) {
-  const [checked, setChecked] = useState(task.isDone);
-  const [isEdited, setIsEdited] = useState(false);
-  const [title, setTitle] = useState(task.title);
+interface TaskItemProps {
+  task: Todo;
+  deleteTask: (id: number) => Promise<void>;
+  saveTask: (id: number, updatedTitle: Partial<Todo>) => Promise<void>;
+  todoStatusChange: (id: number, updatedStatus: Partial<Todo>) => Promise<void>;
+}
 
-  function handleSaveClick(taskId, updatedTitle) {
+export default function TaskItem({ task, deleteTask, saveTask, todoStatusChange }: TaskItemProps): JSX.Element {
+  const [checked, setChecked] = useState<boolean>(task.isDone);
+  const [isEdited, setIsEdited] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>(task.title);
+
+  function handleSaveClick(taskId: number, updatedTitle: string) {
     saveTask(taskId, { title: updatedTitle });
     setTitle(updatedTitle);
     setIsEdited(false);
   }
 
-  function handleDeleteTask(taskId) {
+  function handleDeleteTask(taskId: number) {
     deleteTask(taskId);
   }
 
@@ -24,7 +32,7 @@ export default function TaskItem({ task, deleteTask, saveTask, todoStatusChange 
     setTitle(task.title);
   }
 
-  function handleTodoStatusChange(taskId, updatedStatus) {
+  function handleTodoStatusChange(taskId: number, updatedStatus: boolean) {
     setChecked((prev) => !prev);
     todoStatusChange(taskId, { isDone: updatedStatus });
   }
