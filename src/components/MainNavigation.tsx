@@ -15,13 +15,6 @@ export default function MainNavigation() {
     <header className={classes.header}>
       <nav>
         <ul className={classes.list}>
-          {!isLogged && (
-            <>
-              <li className={classes.navigation_li}><NavLink to="/feature-ED-2_todo-list/auth" className={({ isActive }) => (isActive ? classes.active : undefined)}>Login</NavLink></li>
-              <li className={classes.navigation_li}><NavLink to="/feature-ED-2_todo-list/registration" className={({ isActive }) => (isActive ? classes.active : undefined)}>Register</NavLink></li>
-              <li className={classes.navigation_li}><NavLink to="/feature-ED-2_todo-list/cabinet" className={({ isActive }) => (isActive ? classes.active : undefined)}>Cabinet</NavLink></li>
-            </>
-          )}
           {isLogged && (
             <>
               <li className={classes.navigation_li}><NavLink to="/feature-ED-2_todo-list/todo" className={({ isActive }) => (isActive ? classes.active : undefined)}>Todo</NavLink></li>

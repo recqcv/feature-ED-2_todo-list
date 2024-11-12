@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/use-auth";
-import { checkAccesToken, getUserData } from "../store/slices/authSlice";
+import {  getUserData } from '@/store/slices/authSlice';
 import classes from "./Cabinet.module.css";
 
 export default function Cabinet() {
@@ -8,11 +8,9 @@ export default function Cabinet() {
   const user = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
-    if (!user) {
-      dispatch(checkAccesToken());
-      dispatch(getUserData()).unwrap()
-    }
-  }, [dispatch, user]);
+    dispatch(getUserData());
+  }, [dispatch]);
+
   return (
     <div className={classes.container}>
       <h2 className={classes.title}>Личный кабинет</h2>

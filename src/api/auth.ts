@@ -1,14 +1,50 @@
 import axios, { AxiosRequestConfig } from "axios";
 import {
-  UserRegistration,
-  AuthData,
-  RefreshToken,
-  Profile,
-  ProfileRequest,
-  PasswordRequest,
   Token
 } from "../types/authTypes";
 
+
+
+let token = {
+  accessToken: null as string | null,
+  refreshToken: localStorage.getItem('refreshToken'),
+  exp: null as number | null,
+}
+
+export const setToken = (accessToken: string, refreshToken: string) => {
+  token.accessToken = accessToken;
+  token.refreshToken = refreshToken;
+  token.exp = getTokenExpiryDate(accessToken);
+  localStorage.setItem('refreshToken', refreshToken);
+
+  console.log('Установлен новый токен (setToken):', token);
+}
+
+export const getTokenExpiryDate = (token: string): number | null => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.exp || null;
+  } catch (error) {
+    console.error('не удалось получить время смерти токена: ', error);
+    return null;
+  }
+}
+
+export const isTokenExpired = (): boolean => {
+  if (!token.exp) return true
+  const currentTime = Math.floor(Date.now() / 1000);
+  return currentTime >= token.exp
+}
+
+export const getToken = () => {
+  return token;
+}
+
+export const killToken = () => {
+  token.accessToken = null;
+  token.refreshToken = null;
+  localStorage.removeItem('refreshToken');
+}
 
 export const api = axios.create({
   withCredentials: true,
@@ -16,13 +52,15 @@ export const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-
 })
 
 api.interceptors.request.use(config => {
-  config.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`
+  const token = getToken();
+  if (token.accessToken) {
+    config.headers.Authorization = `Bearer ${token.accessToken}`;
+  }
   return config;
-})
+});
 
 api.interceptors.response.use(
   response => response,
@@ -31,8 +69,8 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && error.config && !error.config._retry) {
       originalRequest._retry = true
       try {
-        await refreshAuthToken();
-        error.config.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
+        // await refreshAuthToken();
+        error.config.headers.Authorization = `Bearer ${getToken().accessToken}`;
         return api.request(originalRequest);
       } catch (err: any) {
         console.log('не получилось обновить токен: ', err);
@@ -43,83 +81,18 @@ api.interceptors.response.use(
   }
 )
 
-export const refreshAuthToken = async (): Promise<Token> => {
+export const refreshAuthToken = async (refreshToken: string): Promise<Token> => {
+  if (!refreshToken) {
+    console.error("Рефреш токен отсутствует (refreshAuthToken в api)");
+    throw new Error("Рефреш токен отсутствует");
+  }
   try {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken) {
-      throw new Error('No refresh token');
-    }
     const res = await api.post<Token>('/auth/refresh', { refreshToken });
     const { accessToken, refreshToken: newRefreshToken } = res.data;
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', newRefreshToken);
+    setToken(accessToken, newRefreshToken);
     return res.data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || 'Ошибка обновления токена')
+  } catch (error) {
+    console.error("Ошибка обновления токена (refreshAuthToken в api): ", error);
+    throw error;
   }
 }
-
-// export const signin = async (authData: AuthData): Promise<Token> => {
-//   try {
-//     const res = await api.post<Token>('/auth/signin', { authData })
-//     if (res.status === 200) {
-//       const { accessToken, refreshToken } = res.data;
-//       console.log('успешная авториация')
-//       localStorage.setItem('accessToken', accessToken);
-//       localStorage.setItem('refreshToken', refreshToken);
-//       return res.data;
-//     } else {
-//       throw new Error('Неуспешная авторизация, статус: ' + res.status);
-//     }
-//   } catch (error) {
-//     throw console.error(error);
-//   }
-// }
-
-// export const signup = async (userData: UserRegistration): Promise<Profile> => {
-//   try {
-//     const res = await api.post<Profile>('/auth/signup', userData)
-//     console.log(res.data)
-//     return res.data
-//   } catch (error) {
-//     throw console.error(error);
-//   }
-// }
-
-// export const logout = async () => {
-//   await api.get('/user/logout');
-//   localStorage.clear();
-// }
-
-// export const getProfile = async (): Promise<Profile> => {
-//   try {
-//     const accessToken = localStorage.getItem('accessToken');
-//     const res = await api.get<Profile>('/user/profile', {
-//       headers: { Authorization: `Bearer ${accessToken}` },
-//     });
-//     return res.data;
-//   } catch (error) {
-//     throw console.error(error);
-//   }
-// }
-
-// export const updateProfile = async (profileData: ProfileRequest): Promise<Profile> => {
-//   try {
-//     const accessToken = localStorage.getItem('accessToken');
-//     const res = await api.put<Profile>('/user/profile', profileData, {
-//       headers: { Authorization: `Bearer ${accessToken}` },
-//     });
-//     return res.data;
-//   } catch (error) {
-//     throw console.error(error);
-//   }
-// }
-
-// export const resetPassword = async (passwordData: PasswordRequest): Promise<void> => {
-//   const accessToken = localStorage.getItem('accessToken');
-//   await api.put('/user/profile/reset-password', passwordData,
-//     {
-//       headers: { Authorization: `Bearer ${accessToken}` },
-//     }
-//   )
-// }
