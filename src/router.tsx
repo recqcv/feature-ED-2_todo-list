@@ -1,31 +1,26 @@
 import { createBrowserRouter } from "react-router-dom";
-import RootLayout from "@/layouts/RootLayout";
+import MainLayout from "@/layouts/MainLayout";
 import AuthLayout from "@/layouts/AuthLayout";
-import Authentication from "./pages/Auth/Login/Login";
-import Registration from "./pages/Auth/Registration/Registration";
-import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 import Todo from "./pages/Todo/Todo";
 import CabinetPage from "./pages/Cabinet/CabinetPage";
+import LoginPage from "@/pages/Auth/Login/LoginPage";
+import RegisterPage from "@/pages/Auth/Registration/RegisterPage";
 
 export const router = createBrowserRouter([
   {
-    path: '/feature-ED-2_todo-list',
-    element: <RootLayout />,
+    path: '/feature-ED-2_todo-list/auth',
+    element: <AuthLayout />,
     children: [
-      {
-        element: <AuthLayout />,
-        children: [
-          { path: 'auth', element: <Authentication /> },
-          { path: 'registration', element: <Registration /> },
-        ],
-      },
-      {
-        element: <ProtectedRoute />,
-        children: [
-          { path: 'todo', element: <Todo /> },
-          { path: 'cabinet', element: <CabinetPage /> },
-        ],
-      },
+      { path: '', element: <LoginPage /> },
+      { path: 'registration', element: <RegisterPage /> },
+    ],
+  },
+  {
+    path: '/feature-ED-2_todo-list',
+    element: <MainLayout />,
+    children: [
+      { path: 'todo', element: <Todo /> },
+      { path: 'cabinet', element: <CabinetPage /> },
     ],
   },
 ]);

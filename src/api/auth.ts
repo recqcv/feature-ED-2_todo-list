@@ -90,6 +90,7 @@ export const refreshAuthToken = async (refreshToken: string): Promise<Token> => 
     const res = await api.post<Token>('/auth/refresh', { refreshToken });
     const { accessToken, refreshToken: newRefreshToken } = res.data;
     setToken(accessToken, newRefreshToken);
+    console.log('Токен ЗАРЕФРЕШЕН (refreshAuthToken)')
     return res.data;
   } catch (error) {
     console.error("Ошибка обновления токена (refreshAuthToken в api): ", error);

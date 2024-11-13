@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Profile, UserRegistration, Token, AuthData, RefreshToken } from "../../types/authTypes";
-import { api, killToken, refreshAuthToken, setToken } from "@/api/auth";
-import { RootState } from "../store";
+import { Profile, UserRegistration, Token, AuthData } from "@/types/authTypes";
+import { api, killToken, setToken } from "@/api/auth";
 
 
 interface authState {
@@ -18,47 +17,6 @@ const initialState: authState = {
   loading: false,
   error: null,
 }
-
-// let tokenInfo = {
-//   accessToken: null as string | null,
-//   refreshToken: localStorage.getItem('refreshToken'),
-//   exp: null as number | null,
-// }
-
-// export const getTokenExpiryDate = (token: string): number | null => {
-//   try {
-//     const payload = JSON.parse(atob(token.split('.')[1]));
-//     return payload.exp || null;
-//   } catch (error) {
-//     console.error('не удалось получить время смерти токена: ', error);
-//     return null;
-//   }
-// }
-
-// export const setTokenInfo = (accessToken: string, refreshToken: string) => {
-//   tokenInfo.accessToken = accessToken;
-//   tokenInfo.refreshToken = refreshToken;
-//   tokenInfo.exp = getTokenExpiryDate(accessToken);
-//   localStorage.setItem('refreshToken', refreshToken);
-
-// }
-
-// export const getTokenInfo = () => {
-//   return tokenInfo
-// }
-
-// export const killTokenInfo = () => {
-//   tokenInfo.accessToken = null;
-//   tokenInfo.refreshToken = null;
-//   localStorage.removeItem('refreshToken');
-// }
-
-// export const isTokenExpiredInfo = (): boolean => {
-//   if (!tokenInfo.exp) return true
-//   const currentTime = Math.floor(Date.now() / 1000);
-//   return currentTime >= tokenInfo.exp
-// }
-
 
 export const registerUser = createAsyncThunk<UserRegistration, UserRegistration>(
   '/auth/signup',
@@ -88,51 +46,11 @@ export const signin = createAsyncThunk<Token, AuthData>(
   }
 )
 
-// export const refreshAuthToken = createAsyncThunk<Token, void>(
-//   '/auth/refresh',
-//   async (_, { rejectWithValue }) => {
-//     try {
-//       const refreshToken = getToken().refreshToken;
-//       if (!refreshToken) {
-//         throw new Error('Нет рефреш токена');
-//       }
-//       const res = await api.post('/auth/refresh', { refreshToken });
-//       const { accessToken, refreshToken: newRefreshToken } = res.data;
-//       setToken(accessToken, newRefreshToken);
-//       return res.data;
-//     } catch (error: any) {
-//       console.error("Ошибка обновления токена: ", error)
-//       return rejectWithValue(error.message || 'Не удалось обновить токен!');
-//     }
-//   }
-// )
-
-
-// export const refreshAuthTokenThunk = createAsyncThunk<Token, void, { state: RootState }>(
-//   "/auth/refresh",
-//   async (_, { rejectWithValue, getState }) => {
-//     try {
-//       const refreshToken = getState().auth.refreshToken;
-//       if (!refreshToken) {
-//         throw new Error("Нет рефреш токена");
-//       }
-//       const res = await api.post<Token>('/auth/refresh', { refreshToken });
-//       const { accessToken, refreshToken: newRefreshToken } = res.data;
-//       setToken(accessToken, newRefreshToken);
-//       return res.data;
-//     } catch (error: any) {
-//       console.error("Ошибка обновления токена: ", error);
-//       return rejectWithValue(error.message || "Не удалось обновить токен!");
-//     }
-//   }
-// );
-
 export const logout = createAsyncThunk<void, void>(
   '/user/logout',
   async (_, { dispatch }) => {
     try {
-      await api.get('/user/logout')
-
+      await api.post('/user/logout')
     } finally {
       killToken();
       dispatch(authSlice.actions.clearAuthState());
@@ -209,14 +127,7 @@ const authSlice = createSlice({
       .addCase(getUserData.rejected, (state: authState, action: PayloadAction<any>) => {
         state.error = action.payload as string;
       })
-      // .addCase(refreshAuthTokenThunk.fulfilled, (state: authState, action: PayloadAction<Token>) => {
-      //   state.accessToken = action.payload.accessToken;
-      //   state.refreshToken = action.payload.refreshToken;
-      // })
-      // .addCase(refreshAuthTokenThunk.rejected, (state: authState) => {
-      //   state.accessToken = null;
-      //   state.refreshToken = null;
-      // });
+      
 
   }
 })

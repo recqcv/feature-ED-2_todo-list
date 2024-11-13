@@ -1,6 +1,4 @@
-import TodoPage from "../../components/TodoPage";
-import { Link } from "react-router-dom";
-
+import TodoPage from "../../components/TodoComponents/TodoPage";
 export default function Todo() {
   return (
     <>

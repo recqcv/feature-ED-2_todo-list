@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import { Container, Grid2, ListItem, Paper } from "@mui/material";
-import { registerUser } from "../store/slices/authSlice";
-import { UserRegistration } from "../types/authTypes";
-import { useAppDispatch } from "../hooks/use-auth";
+import { registerUser } from "@/store/slices/authSlice";
+import { UserRegistration } from "@/types/authTypes";
+import { useAppDispatch } from "@/hooks/use-auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import RegForm from "./RegForm";
+import RegForm from "@/components/RegForm";
 
-export default function RegistrationForm(): JSX.Element {
+export default function RegisterPage(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);

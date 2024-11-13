@@ -17,9 +17,9 @@ export default function RegForm({ handleSubmitForm }: any) {
           sx={{ mb: 2 }}
           autoFocus
           label="Your name"
-          inputProps={{ 
+          inputProps={{
             pattern: "[a-zA-Zа-яА-ЯёЁ]{1,60}",
-           }}
+          }}
         />
         <TextField
           name="login"
