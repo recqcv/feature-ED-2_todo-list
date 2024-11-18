@@ -22,7 +22,7 @@ const schema = yup.object().shape({
     .matches(/^[a-zA-Z]+$/, "Только латинские буквы"),
   password: yup.string()
     .required("Обязательное поле")
-    .min(8, "Мин. длина пароля - 8 символов"),
+    .min(6, "Мин. длина пароля - 6 символов"),
 });
 
 export default function LoginPage(): JSX.Element {

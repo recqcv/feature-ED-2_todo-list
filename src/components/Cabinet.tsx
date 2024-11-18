@@ -17,7 +17,7 @@ export default function Cabinet() {
 
   useEffect(() => {
     dispatch(getUserData());
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className={classes.container}>

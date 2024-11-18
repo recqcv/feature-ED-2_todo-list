@@ -15,6 +15,7 @@ export default function MainNavigation() {
             <>
               <li className={classes.navigation_li}><NavLink to="/feature-ED-2_todo-list/todo" className={({ isActive }) => (isActive ? classes.active : undefined)}>Todo</NavLink></li>
               <li className={classes.navigation_li}><NavLink to="/feature-ED-2_todo-list/cabinet" className={({ isActive }) => (isActive ? classes.active : undefined)}>Cabinet</NavLink></li>
+              <li className={classes.navigation_li}><NavLink to="/feature-ED-2_todo-list/users" className={({ isActive }) => (isActive ? classes.active : undefined)}>Users</NavLink></li>
             </>
           )}
         </ul>
