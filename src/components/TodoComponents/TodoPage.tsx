@@ -2,8 +2,8 @@ import AddTask from "./AddTask";
 import Filter from "./Filter";
 import TaskList from "./TaskList";
 import { useEffect, useState } from "react";
-import { getTodos, deleteTodoById, updateTodoById } from "../api/todos";
-import { TodosInfo, Todo, filter } from '../types/types'
+import { getTodos, deleteTodoById, updateTodoById } from "../../api/todos";
+import { TodosInfo, Todo, filter } from '@/types/types'
 
 export default function TodoPage() {
   const [todos, setTodos] = useState<Todo[]>([]);

@@ -1,4 +1,4 @@
-import { filter, TodosInfo } from '../types/types'
+import { filter, TodosInfo } from '@/types/types'
 
 interface FilterProps {
   updateTodosAndCounterByPickedFilter: (filter: string) => void

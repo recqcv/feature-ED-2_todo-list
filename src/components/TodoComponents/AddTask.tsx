@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createTask } from "../api/todos";
+import { createTask } from "@/api/todos";
 
 interface updateTodoPageProps {
   updateTodoPage: () => Promise<void>;

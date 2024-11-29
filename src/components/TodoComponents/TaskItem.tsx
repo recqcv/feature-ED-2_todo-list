@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Todo } from '../types/types'
+import { Todo } from '@/types/types'
 
 interface TaskItemProps {
   task: Todo;

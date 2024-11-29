@@ -1,5 +1,5 @@
 import TaskItem from "./TaskItem";
-import { Todo } from '../types/types'
+import { Todo } from '@/types/types'
 
 interface TaskListProps {
   todos: Todo[];

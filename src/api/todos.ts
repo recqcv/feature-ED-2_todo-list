@@ -1,40 +1,33 @@
 // const BASE_TODOS_URL = "https://easydev.club/api/v1/todos";
 import { filter, Todo } from '../types/types'
+import axios from 'axios';
+
+
 
 export async function getTodos(filter: filter) {
   try {
-    const res = await fetch(`https://easydev.club/api/v1/todos?filter=${filter}`, { method: "GET" });
-
-    if (!res.ok) {
-      throw new Error("Something went wrong!");
-    }
-    const resData = await res.json();
-    return resData;
+    const res = await axios.get(`https://easydev.club/api/v1/todos`, { params: { filter } });
+    return res.data;
   } catch (err: any) {
-    throw console.error('Ошибка в функции "getTodos": ', err);
+    console.error('Ошибка в функции "getTodos": ', err);
+    throw err
   }
 }
 
 export async function createTask(todo: Partial<Todo>) {
   try {
-    const res = await fetch("https://easydev.club/api/v1/todos", {
-      method: "POST",
+    const res = await axios.post("https://easydev.club/api/v1/todos", {
+      isDone: todo.isDone,
+      title: todo.title,
+    }, {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        isDone: todo.isDone,
-        title: todo.title,
-      }),
-    });
-
-    if (!res.ok) {
-      throw new Error("Что то пошло не так");
-    }
-    const resData = await res.json();
-    return resData;
+    })
+    return res.data;
   } catch (err: any) {
-    throw console.error('Ошибка в "createTask": ', err);
+    console.error('Ошибка в "createTask": ', err);
+    throw err
   }
 }
 
