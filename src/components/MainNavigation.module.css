@@ -1,0 +1,23 @@
+.list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+.header {
+  max-width: 60rem;
+  margin: auto;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+}
+.navigation_li {
+  list-style: none;
+}
+.active {
+  color: #04ff3a;
+  list-style: none;
+}
+.active:hover {
+  color: #04ff3a;
+}

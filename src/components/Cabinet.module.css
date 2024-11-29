@@ -1,0 +1,48 @@
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.userRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.userDataKeys {
+  font-weight: bold;
+  margin-right: 10px;
+  width: 100px;
+  text-align: left;
+  font-size: 1.2rem;
+}
+
+.userDataInfo {
+  display: flex;
+  /* align-items: left; */
+  margin-right: auto;
+  margin-left: 10px;
+  color: rgb(47, 42, 48);
+  font-size: 1rem;
+
+}
+
+.editButton {
+  margin-left: 10px;
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  cursor: pointer;
+}

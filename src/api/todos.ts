@@ -1,22 +1,21 @@
-const BASE_TODOS_URL = "https://easydev.club/api/v1/todos";
+// const BASE_TODOS_URL = "https://easydev.club/api/v1/todos";
+import { filter, Todo } from '../types/types'
 
-// вынести адресс в 1 переменную, неудобно
-export async function getTodos(filter = "all") {
+export async function getTodos(filter: filter) {
   try {
     const res = await fetch(`https://easydev.club/api/v1/todos?filter=${filter}`, { method: "GET" });
+
     if (!res.ok) {
-      throw new Error(resData.message || "Something went wrong!");
+      throw new Error("Something went wrong!");
     }
     const resData = await res.json();
     return resData;
-  } catch (err) {
-    console.err('Ошибка в функции "getTodos": ', err);
+  } catch (err: any) {
+    throw console.error('Ошибка в функции "getTodos": ', err);
   }
-  // return resData.data; массив
-  // return resData.info; для фильтра
 }
 
-export async function createTask(todo) {
+export async function createTask(todo: Partial<Todo>) {
   try {
     const res = await fetch("https://easydev.club/api/v1/todos", {
       method: "POST",
@@ -30,32 +29,32 @@ export async function createTask(todo) {
     });
 
     if (!res.ok) {
-      throw new Error(resData.message || "Что то пошло не так");
+      throw new Error("Что то пошло не так");
     }
     const resData = await res.json();
     return resData;
-  } catch (err) {
-    console.error('Ошибка в "createTask": ', err);
+  } catch (err: any) {
+    throw console.error('Ошибка в "createTask": ', err);
   }
 }
 
-export async function getTodoById(id) {
+export async function getTodoById(id: number) {
   try {
     const res = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
       method: "GET",
     });
 
     if (!res.ok) {
-      throw new Error(resData.message || "Что то пошло не так");
+      throw new Error("Что то пошло не так");
     }
     const resData = await res.json();
     return resData;
-  } catch (err) {
-    console.error('Ощибка в "getTodoById": ', err);
+  } catch (err: any) {
+    throw console.error('Ощибка в "getTodoById": ', err);
   }
 }
 
-export async function updateTodoById(id, updatedTodo) {
+export async function updateTodoById(id: number, updatedTodo: Partial<Todo>) {
   try {
     const res = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
       method: "PUT",
@@ -69,26 +68,26 @@ export async function updateTodoById(id, updatedTodo) {
     });
 
     if (!res.ok) {
-      throw new Error(resData.message || "Что то пошло не так");
+      throw new Error("Что то пошло не так");
     }
 
     const resData = await res.json();
     return resData;
-  } catch (err) {
-    console.error('Ошибка в "updateTodoById": ', err);
+  } catch (err: any) {
+    throw console.error('Ошибка в "updateTodoById": ', err);
   }
 }
 
-export async function deleteTodoById(id) {
+export async function deleteTodoById(id: number) {
   try {
     const res = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
       method: "DELETE",
     });
     if (!res.ok) {
-      throw new Error(resData.message || "Что то пошло не так");
+      throw new Error("Что то пошло не так");
     }
     return;
-  } catch (err) {
-    console.error('Ошибка в "deleteTodoById": ', err);
+  } catch (err: any) {
+    throw console.error('Ошибка в "deleteTodoById": ', err);
   }
 }
